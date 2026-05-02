@@ -43,6 +43,34 @@
      }
   -------------------------------------------------------- */
 
+  const SOUND_BASE = 'https://mor-blogger-embeds.pages.dev/tap-to-build/tap-to-build-sound-effects/';
+
+  const SOUNDS = {
+    tileTap:        'TileTap.wav',
+    tileDeselect:   'TileDeselect.wav',
+    correct:        'CorrectAnswer.wav',
+    wrong:          'WrongAnswer.wav',
+    progressTick:   'ProgressTick.wav',
+    complete:       'LessonComplete.wav',
+  };
+
+  const audioCache = {};
+
+  function loadSounds() {
+    Object.entries(SOUNDS).forEach(([key, file]) => {
+      const audio = new Audio(SOUND_BASE + file);
+      audio.preload = 'auto';
+      audioCache[key] = audio;
+    });
+  }
+
+  function playSound(key) {
+    const audio = audioCache[key];
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }
+
   const CSS = `
     @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap');
     .mor-ttb-wrap{font-family:'DM Sans',sans-serif;max-width:580px;margin:0 auto;padding:1.5rem 1rem;box-sizing:border-box;}
@@ -128,6 +156,7 @@
 
     function render() {
       if (qi >= questions.length) {
+        playSound('complete');
         container.innerHTML = `<div class="mor-ttb-wrap"><div class="mor-ttb-done">
           <div class="mor-ttb-score">${correct}/${questions.length}</div>
           <div class="mor-ttb-done-title">Lesson complete</div>
@@ -187,6 +216,7 @@
       if (state !== 'answering' || usedIndices.has(i)) return;
       usedIndices.add(i);
       selected.push(currentTiles[i]);
+      playSound('tileTap');
       render();
     }
 
@@ -196,6 +226,7 @@
       selected.splice(i, 1);
       const tileIdx = [...usedIndices].find(ti => currentTiles[ti] === word);
       usedIndices.delete(tileIdx);
+      playSound('tileDeselect');
       render();
     }
 
@@ -206,16 +237,21 @@
         state = 'correct';
         correct++;
         results[qi].correct = true;
+        playSound('correct');
       } else {
         state = 'wrong';
         lives = Math.max(0, lives - 1);
+        playSound('wrong');
       }
       render();
     }
 
     function next() {
       qi++; state = 'answering'; selected = []; usedIndices.clear();
-      if (qi < questions.length) currentTiles = makeTiles();
+      if (qi < questions.length) {
+        currentTiles = makeTiles();
+        playSound('progressTick');
+      }
       render();
     }
 
@@ -232,6 +268,7 @@
 
   function init() {
     injectStyles();
+    loadSounds();
     document.querySelectorAll('.mor-tap-to-build[data-questions]').forEach(initTapToBuild);
   }
 
