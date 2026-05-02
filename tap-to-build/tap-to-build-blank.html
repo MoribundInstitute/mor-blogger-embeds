@@ -1,0 +1,31 @@
+<!--
+  tap-to-build-blank.html
+  mor-blogger-embeds — https://github.com/MoribundMurdoch/mor-blogger-embeds
+
+  HOW TO USE:
+  1. Copy everything from <div class="mor-tap-to-build"> down to the closing </script>
+  2. In your Blogger post, switch to HTML view
+  3. Paste and fill in your own questions
+
+  FIELDS:
+    prompt      — instruction shown above the phrase (e.g. "Translate into English:")
+    phrase      — the word or sentence the learner is responding to
+    answer      — the correct words IN ORDER, each as a separate string
+    distractors — wrong tiles to pad the word bank with (aim for 3-5)
+-->
+
+<div class="mor-tap-to-build" data-questions='[
+  {
+    "prompt": "Your instruction here:",
+    "phrase": "Your phrase here.",
+    "answer": ["First", "word", "here"],
+    "distractors": ["wrong", "word", "one", "wrong", "word", "two"]
+  },
+  {
+    "prompt": "Your instruction here:",
+    "phrase": "Another phrase here.",
+    "answer": ["Another", "answer", "here"],
+    "distractors": ["wrong", "word", "one", "wrong", "word", "two"]
+  }
+]'></div>
+<script src="https://mor-blogger-embeds.pages.dev/tap-to-build/tap-to-build.js"></script>
