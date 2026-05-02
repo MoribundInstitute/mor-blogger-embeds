@@ -46,12 +46,12 @@
   const SOUND_BASE = 'https://mor-blogger-embeds.pages.dev/tap-to-build/tap-to-build-sound-effects/';
 
   const SOUNDS = {
-    tileTap:        'TileTap.wav',
-    tileDeselect:   'TileDeselect.wav',
-    correct:        'CorrectAnswer.wav',
-    wrong:          'WrongAnswer.wav',
-    progressTick:   'ProgressTick.wav',
-    complete:       'LessonComplete.wav',
+    tileTap:      'TileTap.wav',
+    tileDeselect: 'TileDeselect.wav',
+    correct:      'CorrectAnswer.wav',
+    wrong:        'WrongAnswer.wav',
+    progressTick: 'ProgressTick.wav',
+    complete:     'LessonComplete.wav',
   };
 
   const audioCache = {};
@@ -76,8 +76,10 @@
     .mor-ttb-wrap{font-family:'DM Sans',sans-serif;max-width:580px;margin:0 auto;padding:1.5rem 1rem;box-sizing:border-box;}
     .mor-ttb-progress-bar{height:12px;background:#e8e5df;border-radius:99px;overflow:hidden;margin-bottom:1.25rem;}
     .mor-ttb-progress-fill{height:100%;background:#a78a4d;border-radius:99px;transition:width 0.4s ease;}
-    .mor-ttb-lives{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:1.25rem;font-size:14px;font-weight:500;color:#666;}
+    .mor-ttb-status{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+    .mor-ttb-lives{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#666;}
     .mor-ttb-heart{color:#c0392b;font-size:16px;}
+    .mor-ttb-counter{font-size:13px;font-weight:500;color:#999;}
     .mor-ttb-label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#999;margin-bottom:0.5rem;}
     .mor-ttb-question{font-family:'Lora',serif;font-size:1.4rem;font-weight:600;color:#1a1a1a;margin-bottom:1.5rem;line-height:1.4;}
     .mor-ttb-answer-zone{min-height:56px;border-bottom:2px solid #ccc;margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;padding-bottom:8px;}
@@ -173,6 +175,7 @@
 
       const q = questions[qi];
       const pct = Math.round((qi / questions.length) * 100);
+      const remaining = questions.length - qi;
       const hearts = Array.from({ length: 5 }, (_, i) =>
         `<span class="mor-ttb-heart">${i < lives ? '♥' : '♡'}</span>`).join('');
       const answerHtml = selected.length
@@ -192,7 +195,10 @@
 
       container.innerHTML = `<div class="mor-ttb-wrap">
         <div class="mor-ttb-progress-bar"><div class="mor-ttb-progress-fill" style="width:${pct}%"></div></div>
-        <div class="mor-ttb-lives">${hearts} ${lives}</div>
+        <div class="mor-ttb-status">
+          <div class="mor-ttb-lives">${hearts} ${lives}</div>
+          <div class="mor-ttb-counter">${remaining} question${remaining === 1 ? '' : 's'} left</div>
+        </div>
         <div class="mor-ttb-label">${q.prompt}</div>
         <div class="mor-ttb-question">${q.phrase}</div>
         <div class="mor-ttb-answer-zone ${zoneClass}">${answerHtml}</div>
